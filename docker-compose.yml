@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  stockpilot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: stockpilot_erp
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - NODE_ENV=production
+      - JWT_SECRET=stockpilot_production_secure_jwt_secret_key_2026
+    volumes:
+      - stockpilot_db_data:/app
+    restart: unless-stopped
+
+volumes:
+  stockpilot_db_data:
