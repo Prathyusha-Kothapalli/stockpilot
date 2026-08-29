@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="StockPilot - Enterprise Inventory & Warehouse Management ERP System">
+  <title>StockPilot ERP — Inventory & Warehouse Management</title>
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📦</text></svg>">
+</head>
+<body>
+
+  <!-- Auth Screen Overlay -->
+  <div id="auth-overlay">
+    <div class="auth-box card">
+      <div class="brand-icon" style="margin: 0 auto 1rem auto; width: 50px; height: 50px; font-size: 1.5rem;">⚡</div>
+      <div class="auth-logo">StockPilot</div>
+      <p style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 1.5rem;">Enterprise Inventory & Warehouse ERP</p>
+      
+      <form id="login-form">
+        <div style="text-align: left; margin-bottom: 1rem;">
+          <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); display: block; margin-bottom: 0.35rem;">Email Address</label>
+          <input type="email" id="login-email" class="form-control" style="width: 100%;" value="admin@stockpilot.com" required>
+        </div>
+        <div style="text-align: left; margin-bottom: 1.5rem;">
+          <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); display: block; margin-bottom: 0.35rem;">Password</label>
+          <input type="password" id="login-password" class="form-control" style="width: 100%;" value="Demo@123" required>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.75rem; font-size: 1rem;">Sign In to Dashboard</button>
+      </form>
+
+      <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border-color); font-size: 0.8rem; color: var(--text-muted);">
+        <p style="font-weight: 600; margin-bottom: 0.5rem;">Quick Demo Credentials:</p>
+        <button type="button" class="btn btn-secondary btn-sm" style="margin-right: 0.25rem;" onclick="fillDemo('admin@stockpilot.com')">Admin Account</button>
+        <button type="button" class="btn btn-secondary btn-sm" onclick="fillDemo('manager@stockpilot.com')">Manager Account</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main App Layout -->
+  <div id="app" style="display: none;">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="#" class="brand-logo">
+          <div class="brand-icon">⚡</div>
+          <span>StockPilot</span>
+        </a>
+      </div>
+      <ul class="nav-menu">
+        <li>
+          <a class="nav-item active" data-tab="dashboard">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <span>Dashboard</span>
+          </a>
+        </li>
+        <li>
+          <a class="nav-item" data-tab="products">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+            <span>Product Catalog</span>
+          </a>
+        </li>
+        <li>
+          <a class="nav-item" data-tab="categories">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+            <span>Categories</span>
+          </a>
+        </li>
+        <li>
+          <a class="nav-item" data-tab="suppliers">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <span>Suppliers</span>
+          </a>
+        </li>
+        <li>
+          <a class="nav-item" data-tab="warehouses">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M3 7v14M21 7v14M6 11h12M6 15h12M9 7V3h6v4"/></svg>
+            <span>Warehouses</span>
+          </a>
+        </li>
+        <li>
+          <a class="nav-item" data-tab="purchase-orders">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            <span>Purchase Orders</span>
+          </a>
+        </li>
+        <li>
+          <a class="nav-item" data-tab="stock-movements">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+            <span>Stock Movement</span>
+          </a>
+        </li>
+        <li>
+          <a class="nav-item" data-tab="reports">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            <span>Reports & Analytics</span>
+          </a>
+        </li>
+        <li>
+          <a class="nav-item" data-tab="settings">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            <span>Settings</span>
+          </a>
+        </li>
+      </ul>
+      <div class="sidebar-footer">
+        <div>StockPilot ERP v1.0.0</div>
+        <div style="margin-top: 2px;">SQLite3 + Express + Python 3.10</div>
+      </div>
+    </aside>
+
+    <!-- Main Wrapper -->
+    <main class="main-wrapper">
+      <!-- Navbar -->
+      <header class="navbar">
+        <div class="navbar-search">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="global-search" placeholder="Search SKU, products, barcode, POs...">
+        </div>
+
+        <div class="navbar-actions">
+          <button id="theme-toggle" class="theme-toggle-btn" title="Toggle Light/Dark Theme">🌙</button>
+          
+          <div class="user-profile-badge">
+            <div class="user-avatar" id="avatar-initial">A</div>
+            <div class="user-info">
+              <span class="user-name" id="current-user-name">Administrator</span>
+              <span class="user-role-pill role-admin" id="current-user-role">admin</span>
+            </div>
+          </div>
+
+          <button id="logout-btn" class="btn btn-secondary btn-sm">Sign Out</button>
+        </div>
+      </header>
+
+      <!-- Content Views Body -->
+      <div class="content-body">
+        
+        <!-- Tab 1: Dashboard -->
+        <section id="tab-dashboard" class="tab-view active">
+          <div class="page-header">
+            <div>
+              <h1 class="page-title">Executive Dashboard</h1>
+              <p class="page-subtitle">Real-time inventory metrics, valuation, and stock alerts.</p>
+            </div>
+            <div style="display: flex; gap: 0.5rem;">
+              <button class="btn btn-primary" onclick="openModal('modal-stock-wizard')">⚡ Stock Movement</button>
+              <button class="btn btn-secondary" onclick="openModal('modal-product')">+ Add Product</button>
+            </div>
+          </div>
+
+          <!-- KPI Grid -->
+          <div class="kpi-grid">
+            <div class="card kpi-card">
+              <div class="kpi-icon" style="background: linear-gradient(135deg, #6366f1, #8b5cf6);">💰</div>
+              <div class="kpi-data">
+                <span class="kpi-label">Stock Cost Value</span>
+                <span class="kpi-value" id="kpi-cost-value">$0.00</span>
+                <span class="kpi-trend trend-up">Retail Val: <span id="kpi-retail-value">$0.00</span></span>
+              </div>
+            </div>
+
+            <div class="card kpi-card">
+              <div class="kpi-icon" style="background: linear-gradient(135deg, #10b981, #059669);">📦</div>
+              <div class="kpi-data">
+                <span class="kpi-label">Total SKUs</span>
+                <span class="kpi-value" id="kpi-total-skus">0</span>
+                <span class="kpi-trend">Active Products</span>
+              </div>
+            </div>
+
+            <div class="card kpi-card">
+              <div class="kpi-icon" style="background: linear-gradient(135deg, #f43f5e, #e11d48);">⚠️</div>
+              <div class="kpi-data">
+                <span class="kpi-label">Low Stock Alerts</span>
+                <span class="kpi-value" id="kpi-low-stock" style="color: var(--accent-rose);">0</span>
+                <span class="kpi-trend trend-down">Out of Stock: <span id="kpi-out-stock">0</span></span>
+              </div>
+            </div>
+
+            <div class="card kpi-card">
+              <div class="kpi-icon" style="background: linear-gradient(135deg, #06b6d4, #3b82f6);">🏢</div>
+              <div class="kpi-data">
+                <span class="kpi-label">Warehouses</span>
+                <span class="kpi-value" id="kpi-warehouses">0</span>
+                <span class="kpi-trend">Active Facilities</span>
+              </div>
+            </div>
+
+            <div class="card kpi-card">
+              <div class="kpi-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">📄</div>
+              <div class="kpi-data">
+                <span class="kpi-label">Pending POs</span>
+                <span class="kpi-value" id="kpi-pending-pos">0</span>
+                <span class="kpi-trend">Total Spend: <span id="kpi-total-po-spend">$0</span></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Low Stock Alert Banner -->
+          <div id="low-stock-banner" class="card" style="margin-bottom: 2rem; border-left: 4px solid var(--accent-rose); display: none;">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <div style="display: flex; align-items: center; gap: 1rem;">
+                <span style="font-size: 1.5rem;">⚠️</span>
+                <div>
+                  <h4 style="font-size: 1rem; font-weight: 700; color: var(--accent-rose);">Attention: Low Stock Threshold Threshold Triggered</h4>
+                  <p style="font-size: 0.85rem; color: var(--text-secondary);" id="low-stock-banner-text">3 products are currently below reorder levels.</p>
+                </div>
+              </div>
+              <button class="btn btn-rose btn-sm" onclick="switchTab('products'); filterLowStockOnly();">View Low Stock Matrix</button>
+            </div>
+          </div>
+
+          <!-- Dashboard Charts -->
+          <div class="charts-grid">
+            <div class="card">
+              <div class="chart-header">
+                <h3 class="chart-title">Stock Movements Trend (Inbound vs Outbound)</h3>
+              </div>
+              <div id="chart-movements" class="svg-chart-container"></div>
+            </div>
+
+            <div class="card">
+              <div class="chart-header">
+                <h3 class="chart-title">Category Value Breakdown</h3>
+              </div>
+              <div id="chart-categories" class="svg-chart-container"></div>
+            </div>
+          </div>
+
+          <!-- Recent Movements Audit Trail -->
+          <div class="card">
+            <div class="chart-header">
+              <h3 class="chart-title">Recent Inventory Transactions</h3>
+              <button class="btn btn-secondary btn-sm" onclick="switchTab('stock-movements')">View All Logs</button>
+            </div>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Ref No</th>
+                    <th>Type</th>
+                    <th>Product</th>
+                    <th>Qty</th>
+                    <th>Source / Target</th>
+                    <th>User</th>
+                    <th>Timestamp</th>
+                  </tr>
+                </thead>
+                <tbody id="dash-recent-movements">
+                  <!-- Dynamic JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- Tab 2: Products -->
+        <section id="tab-products" class="tab-view" style="display: none;">
+          <div class="page-header">
+            <div>
+              <h1 class="page-title">Product Catalog Matrix</h1>
+              <p class="page-subtitle">Manage SKUs, barcodes, cost/selling pricing, and warehouse locations.</p>
+            </div>
+            <button class="btn btn-primary" onclick="openModal('modal-product')">+ Add New Product</button>
+          </div>
+
+          <div class="toolbar card">
+            <div class="toolbar-group">
+              <input type="text" id="prod-search-input" class="form-control" placeholder="Search SKU, Name, Barcode..." style="width: 240px;">
+              
+              <select id="prod-category-filter" class="form-control">
+                <option value="">All Categories</option>
+              </select>
+
+              <select id="prod-warehouse-filter" class="form-control">
+                <option value="">All Warehouses</option>
+              </select>
+
+              <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; cursor: pointer; color: var(--text-secondary);">
+                <input type="checkbox" id="prod-lowstock-filter"> Low Stock Only
+              </label>
+            </div>
+
+            <div class="toolbar-group">
+              <select id="prod-sort-by" class="form-control">
+                <option value="created_at">Sort by Date</option>
+                <option value="name">Sort by Name</option>
+                <option value="quantity">Sort by Quantity</option>
+                <option value="cost_price">Sort by Cost Price</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="card" style="padding: 0; overflow: hidden;">
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>SKU & Barcode</th>
+                    <th>Product Name</th>
+                    <th>Category</th>
+                    <th>Brand</th>
+                    <th>Cost Price</th>
+                    <th>Sell Price</th>
+                    <th>Qty in Stock</th>
+                    <th>Status</th>
+                    <th>Location</th>
+                    <th style="text-align: right;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="products-table-body">
+                  <!-- Dynamic JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- Tab 3: Categories -->
+        <section id="tab-categories" class="tab-view" style="display: none;">
+          <div class="page-header">
+            <div>
+              <h1 class="page-title">Category Management</h1>
+              <p class="page-subtitle">Organize products into distinct operational categories.</p>
+            </div>
+            <button class="btn btn-primary" onclick="openModal('modal-category')">+ New Category</button>
+          </div>
+          <div id="categories-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem;">
+            <!-- Dynamic JS -->
+          </div>
+        </section>
+
+        <!-- Tab 4: Suppliers -->
+        <section id="tab-suppliers" class="tab-view" style="display: none;">
+          <div class="page-header">
+            <div>
+              <h1 class="page-title">Supplier Directory</h1>
+              <p class="page-subtitle">Vendor management, contact details, and procurement statistics.</p>
+            </div>
+            <button class="btn btn-primary" onclick="openModal('modal-supplier')">+ Add Supplier</button>
+          </div>
+          <div id="suppliers-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem;">
+            <!-- Dynamic JS -->
+          </div>
+        </section>
+
+        <!-- Tab 5: Warehouses -->
+        <section id="tab-warehouses" class="tab-view" style="display: none;">
+          <div class="page-header">
+            <div>
+              <h1 class="page-title">Multi-Warehouse Facilities</h1>
+              <p class="page-subtitle">Capacity utilization, facility managers, and stock balance per warehouse.</p>
+            </div>
+            <button class="btn btn-primary" onclick="openModal('modal-warehouse')">+ Add Warehouse Facility</button>
+          </div>
+          <div id="warehouses-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1.5rem;">
+            <!-- Dynamic JS -->
+          </div>
+        </section>
+
+        <!-- Tab 6: Purchase Orders -->
+        <section id="tab-purchase-orders" class="tab-view" style="display: none;">
+          <div class="page-header">
+            <div>
+              <h1 class="page-title">Purchase Order Workflow</h1>
+              <p class="page-subtitle">Procurement lifecycle: Draft &rarr; Submitted &rarr; Approved &rarr; Received.</p>
+            </div>
+            <button class="btn btn-primary" onclick="openModal('modal-po-builder')">+ Create Purchase Order</button>
+          </div>
+
+          <div class="toolbar card">
+            <div class="toolbar-group">
+              <select id="po-status-filter" class="form-control">
+                <option value="">All Statuses</option>
+                <option value="Draft">Draft</option>
+                <option value="Submitted">Submitted</option>
+                <option value="Approved">Approved</option>
+                <option value="Received">Received</option>
+                <option value="Cancelled">Cancelled</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="card" style="padding: 0; overflow: hidden;">
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>PO Number</th>
+                    <th>Supplier</th>
+                    <th>Target Warehouse</th>
+                    <th>Total Amount</th>
+                    <th>Status</th>
+                    <th>Expected Delivery</th>
+                    <th>Items</th>
+                    <th style="text-align: right;">Workflow Action</th>
+                  </tr>
+                </thead>
+                <tbody id="po-table-body">
+                  <!-- Dynamic JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- Tab 7: Stock Movements -->
+        <section id="tab-stock-movements" class="tab-view" style="display: none;">
+          <div class="page-header">
+            <div>
+              <h1 class="page-title">Stock Movement Audit Trail</h1>
+              <p class="page-subtitle">Complete ledger of Stock In, Stock Out, Transfers, and Adjustments.</p>
+            </div>
+            <button class="btn btn-primary" onclick="openModal('modal-stock-wizard')">⚡ New Stock Operation</button>
+          </div>
+
+          <div class="card" style="padding: 0; overflow: hidden;">
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Reference No</th>
+                    <th>Movement Type</th>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Source Warehouse</th>
+                    <th>Target Warehouse</th>
+                    <th>Reason / Notes</th>
+                    <th>Performed By</th>
+                    <th>Timestamp</th>
+                  </tr>
+                </thead>
+                <tbody id="stock-movements-table">
+                  <!-- Dynamic JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- Tab 8: Reports & Analytics -->
+        <section id="tab-reports" class="tab-view" style="display: none;">
+          <div class="page-header">
+            <div>
+              <h1 class="page-title">Inventory Reports & Analytics</h1>
+              <p class="page-subtitle">ABC analysis, velocity tracking, and Python 3.10 CLI tools integration.</p>
+            </div>
+            <div style="display: flex; gap: 0.5rem;">
+              <button class="btn btn-emerald" onclick="exportData('csv')">📥 Export CSV</button>
+              <button class="btn btn-secondary" onclick="exportData('json')">📄 Export JSON</button>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+            <div class="card">
+              <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem;">Top 10 Inventory Velocity Movers</h3>
+              <div class="table-responsive">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>SKU</th>
+                      <th>Product</th>
+                      <th>Category</th>
+                      <th>Units Moved</th>
+                    </tr>
+                  </thead>
+                  <tbody id="top-movers-table">
+                    <!-- Dynamic JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="card">
+              <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem;">Valuation by Warehouse Facility</h3>
+              <div class="table-responsive">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Warehouse</th>
+                      <th>SKUs</th>
+                      <th>Total Units</th>
+                      <th>Valuation</th>
+                    </tr>
+                  </thead>
+                  <tbody id="warehouse-valuation-table">
+                    <!-- Dynamic JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Python 3.10 Analytics Engine Showcase -->
+          <div class="card" style="background: rgba(17, 24, 39, 0.95); border: 1px solid var(--accent-primary);">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+              <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <span style="font-size: 1.5rem;">🐍</span>
+                <div>
+                  <h4 style="font-size: 1.1rem; font-weight: 700; color: #fff;">Python 3.10 Analytics & Exporter Utility</h4>
+                  <p style="font-size: 0.85rem; color: var(--text-secondary);">CLI scripts available in <code>python_services/analytics.py</code> & <code>exporter.py</code></p>
+                </div>
+              </div>
+              <button class="btn btn-primary btn-sm" onclick="runPythonAnalyticsDemo()">Run Live Python Script</button>
+            </div>
+            <pre id="python-output" style="background: #000; color: #34d399; font-family: monospace; padding: 1rem; border-radius: var(--radius-md); font-size: 0.85rem; max-height: 220px; overflow-y: auto;">Click 'Run Live Python Script' to execute server-side Python ABC classification analysis...</pre>
+          </div>
+        </section>
+
+        <!-- Tab 9: Settings -->
+        <section id="tab-settings" class="tab-view" style="display: none;">
+          <div class="page-header">
+            <div>
+              <h1 class="page-title">System Settings & Profile</h1>
+              <p class="page-subtitle">Manage workspace preferences, system theme, and database resets.</p>
+            </div>
+          </div>
+
+          <div style="max-width: 680px;" class="card">
+            <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem;">User Profile</h3>
+            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+              <div class="user-avatar" style="width: 50px; height: 50px; font-size: 1.2rem;">A</div>
+              <div>
+                <h4 id="settings-user-name" style="font-size: 1rem; font-weight: 700;">Administrator</h4>
+                <p id="settings-user-email" style="font-size: 0.85rem; color: var(--text-secondary);">admin@stockpilot.com</p>
+                <span id="settings-user-role" class="user-role-pill role-admin" style="margin-top: 4px;">ADMINISTRATOR</span>
+              </div>
+            </div>
+
+            <hr style="border: none; border-top: 1px solid var(--border-color); margin: 1.5rem 0;">
+
+            <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem;">Application Theme</h3>
+            <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
+              <button class="btn btn-secondary" onclick="setTheme('dark')">🌙 Dark Theme (Default)</button>
+              <button class="btn btn-secondary" onclick="setTheme('light')">☀️ Light Theme</button>
+            </div>
+
+            <hr style="border: none; border-top: 1px solid var(--border-color); margin: 1.5rem 0;">
+
+            <h3 style="font-size: 1.1rem; font-weight: 700; color: var(--accent-rose); margin-bottom: 0.5rem;">Danger Zone</h3>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">Reset the database to default seeded data state (30 products, 5 categories, 5 suppliers, 3 warehouses, 20 POs, 50 stock movements).</p>
+            <button class="btn btn-rose" onclick="resetSeedData()">🔄 Reset Database to Demo Seed State</button>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Modals -->
+  <!-- 1. Add / Edit Product Modal -->
+  <div id="modal-product" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modal-product-title">Add New Product</h3>
+        <button class="modal-close" onclick="closeModal('modal-product')">&times;</button>
+      </div>
+      <form id="form-product">
+        <div class="modal-body">
+          <input type="hidden" id="prod-id">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div>
+              <label style="font-size: 0.8rem; font-weight: 600;">SKU Code (Auto-generated if empty)</label>
+              <input type="text" id="form-prod-sku" class="form-control" placeholder="e.g. SKU-ELEC-001">
+            </div>
+            <div>
+              <label style="font-size: 0.8rem; font-weight: 600;">Barcode</label>
+              <input type="text" id="form-prod-barcode" class="form-control" placeholder="e.g. 890100100101">
+            </div>
+          </div>
+          <div style="margin-top: 1rem;">
+            <label style="font-size: 0.8rem; font-weight: 600;">Product Name *</label>
+            <input type="text" id="form-prod-name" class="form-control" style="width: 100%;" required placeholder="e.g. Industrial IoT Gateway v2">
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+            <div>
+              <label style="font-size: 0.8rem; font-weight: 600;">Category</label>
+              <select id="form-prod-category" class="form-control" style="width: 100%;"></select>
+            </div>
+            <div>
+              <label style="font-size: 0.8rem; font-weight: 600;">Brand / Manufacturer</label>
+              <input type="text" id="form-prod-brand" class="form-control" placeholder="e.g. Siemens">
+            </div>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+            <div>
+              <label style="font-size: 0.8rem; font-weight: 600;">Cost Price ($)</label>
+              <input type="number" step="0.01" id="form-prod-cost" class="form-control" placeholder="0.00">
+            </div>
+            <div>
+              <label style="font-size: 0.8rem; font-weight: 600;">Selling Price ($)</label>
+              <input type="number" step="0.01" id="form-prod-sell" class="form-control" placeholder="0.00">
+            </div>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+            <div>
+              <label style="font-size: 0.8rem; font-weight: 600;">Initial Quantity</label>
+              <input type="number" id="form-prod-qty" class="form-control" value="10">
+            </div>
+            <div>
+              <label style="font-size: 0.8rem; font-weight: 600;">Reorder Level</label>
+              <input type="number" id="form-prod-reorder" class="form-control" value="15">
+            </div>
+            <div>
+              <label style="font-size: 0.8rem; font-weight: 600;">Unit</label>
+              <input type="text" id="form-prod-unit" class="form-control" value="pcs">
+            </div>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+            <div>
+              <label style="font-size: 0.8rem; font-weight: 600;">Primary Warehouse</label>
+              <select id="form-prod-warehouse" class="form-control" style="width: 100%;"></select>
+            </div>
+            <div>
+              <label style="font-size: 0.8rem; font-weight: 600;">Shelf / Aisle Location</label>
+              <input type="text" id="form-prod-location" class="form-control" placeholder="e.g. A-12-01">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('modal-product')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Product</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 2. Stock Movement Wizard Modal -->
+  <div id="modal-stock-wizard" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">Stock Operation Wizard</h3>
+        <button class="modal-close" onclick="closeModal('modal-stock-wizard')">&times;</button>
+      </div>
+      <form id="form-stock-wizard">
+        <div class="modal-body">
+          <div style="margin-bottom: 1rem;">
+            <label style="font-size: 0.8rem; font-weight: 600;">Operation Type *</label>
+            <select id="wizard-op-type" class="form-control" style="width: 100%;" onchange="toggleWizardFields()">
+              <option value="IN">Stock In (Receive Inventory)</option>
+              <option value="OUT">Stock Out (Dispatch / Sales)</option>
+              <option value="TRANSFER">Warehouse Transfer</option>
+              <option value="ADJUSTMENT">Audit Adjustment</option>
+            </select>
+          </div>
+
+          <div style="margin-bottom: 1rem;">
+            <label style="font-size: 0.8rem; font-weight: 600;">Select Product *</label>
+            <select id="wizard-product" class="form-control" style="width: 100%;" required></select>
+          </div>
+
+          <div id="wizard-source-wh-group" style="margin-bottom: 1rem; display: none;">
+            <label style="font-size: 0.8rem; font-weight: 600;">Source Warehouse *</label>
+            <select id="wizard-source-wh" class="form-control" style="width: 100%;"></select>
+          </div>
+
+          <div id="wizard-target-wh-group" style="margin-bottom: 1rem;">
+            <label style="font-size: 0.8rem; font-weight: 600;">Target Warehouse *</label>
+            <select id="wizard-target-wh" class="form-control" style="width: 100%;"></select>
+          </div>
+
+          <div style="margin-bottom: 1rem;">
+            <label style="font-size: 0.8rem; font-weight: 600;" id="wizard-qty-label">Quantity *</label>
+            <input type="number" id="wizard-quantity" class="form-control" style="width: 100%;" required min="1">
+          </div>
+
+          <div style="margin-bottom: 1rem;">
+            <label style="font-size: 0.8rem; font-weight: 600;">Reason / Reference Notes</label>
+            <input type="text" id="wizard-reason" class="form-control" style="width: 100%;" placeholder="e.g. Regular Stock Replenishment">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('modal-stock-wizard')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Process Transaction</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 3. New Purchase Order Modal -->
+  <div id="modal-po-builder" class="modal-overlay">
+    <div class="modal-card" style="max-width: 750px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Create Purchase Order</h3>
+        <button class="modal-close" onclick="closeModal('modal-po-builder')">&times;</button>
+      </div>
+      <form id="form-po-builder">
+        <div class="modal-body">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+            <div>
+              <label style="font-size: 0.8rem; font-weight: 600;">Supplier *</label>
+              <select id="po-form-supplier" class="form-control" style="width: 100%;" required></select>
+            </div>
+            <div>
+              <label style="font-size: 0.8rem; font-weight: 600;">Target Warehouse *</label>
+              <select id="po-form-warehouse" class="form-control" style="width: 100%;" required></select>
+            </div>
+          </div>
+          <div style="margin-bottom: 1rem;">
+            <label style="font-size: 0.8rem; font-weight: 600;">Expected Delivery Date</label>
+            <input type="date" id="po-form-date" class="form-control" style="width: 100%;">
+          </div>
+
+          <h4 style="font-size: 0.95rem; font-weight: 700; margin: 1.5rem 0 0.5rem 0;">Line Items</h4>
+          <table class="data-table" style="margin-bottom: 1rem;">
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th style="width: 110px;">Qty</th>
+                <th style="width: 120px;">Unit Cost ($)</th>
+                <th style="width: 50px;"></th>
+              </tr>
+            </thead>
+            <tbody id="po-items-rows">
+              <!-- Dynamic line item rows -->
+            </tbody>
+          </table>
+          <button type="button" class="btn btn-secondary btn-sm" onclick="addPoLineItem()">+ Add Product Line Item</button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('modal-po-builder')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Submit Purchase Order</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 4. Add Category Modal -->
+  <div id="modal-category" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">Add New Category</h3>
+        <button class="modal-close" onclick="closeModal('modal-category')">&times;</button>
+      </div>
+      <form id="form-category">
+        <div class="modal-body">
+          <div style="margin-bottom: 1rem;">
+            <label style="font-size: 0.8rem; font-weight: 600;">Category Name *</label>
+            <input type="text" id="cat-form-name" class="form-control" style="width: 100%;" required placeholder="e.g. Telecommunications">
+          </div>
+          <div style="margin-bottom: 1rem;">
+            <label style="font-size: 0.8rem; font-weight: 600;">Category Code *</label>
+            <input type="text" id="cat-form-code" class="form-control" style="width: 100%;" required placeholder="e.g. CAT-TELE">
+          </div>
+          <div style="margin-bottom: 1rem;">
+            <label style="font-size: 0.8rem; font-weight: 600;">Description</label>
+            <textarea id="cat-form-desc" class="form-control" style="width: 100%; height: 80px;"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('modal-category')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Create Category</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 5. Add Supplier Modal -->
+  <div id="modal-supplier" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">Add Supplier</h3>
+        <button class="modal-close" onclick="closeModal('modal-supplier')">&times;</button>
+      </div>
+      <form id="form-supplier">
+        <div class="modal-body">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+            <div>
+              <label style="font-size: 0.8rem; font-weight: 600;">Supplier Name *</label>
+              <input type="text" id="sup-form-name" class="form-control" style="width: 100%;" required placeholder="e.g. Acme Components">
+            </div>
+            <div>
+              <label style="font-size: 0.8rem; font-weight: 600;">Supplier Code *</label>
+              <input type="text" id="sup-form-code" class="form-control" style="width: 100%;" required placeholder="e.g. SUP-ACME">
+            </div>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+            <div>
+              <label style="font-size: 0.8rem; font-weight: 600;">Contact Person</label>
+              <input type="text" id="sup-form-contact" class="form-control" placeholder="John Doe">
+            </div>
+            <div>
+              <label style="font-size: 0.8rem; font-weight: 600;">Email Address</label>
+              <input type="email" id="sup-form-email" class="form-control" placeholder="sales@acme.com">
+            </div>
+          </div>
+          <div style="margin-bottom: 1rem;">
+            <label style="font-size: 0.8rem; font-weight: 600;">Phone Number</label>
+            <input type="text" id="sup-form-phone" class="form-control" style="width: 100%;" placeholder="+1-555-0199">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('modal-supplier')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Supplier</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 6. Add Warehouse Modal -->
+  <div id="modal-warehouse" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">Add Warehouse Facility</h3>
+        <button class="modal-close" onclick="closeModal('modal-warehouse')">&times;</button>
+      </div>
+      <form id="form-warehouse">
+        <div class="modal-body">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+            <div>
+              <label style="font-size: 0.8rem; font-weight: 600;">Facility Name *</label>
+              <input type="text" id="wh-form-name" class="form-control" style="width: 100%;" required placeholder="e.g. South Depot">
+            </div>
+            <div>
+              <label style="font-size: 0.8rem; font-weight: 600;">Warehouse Code *</label>
+              <input type="text" id="wh-form-code" class="form-control" style="width: 100%;" required placeholder="e.g. WH-SOUTH">
+            </div>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+            <div>
+              <label style="font-size: 0.8rem; font-weight: 600;">Manager Name</label>
+              <input type="text" id="wh-form-manager" class="form-control" placeholder="Manager Name">
+            </div>
+            <div>
+              <label style="font-size: 0.8rem; font-weight: 600;">Max Capacity (Units)</label>
+              <input type="number" id="wh-form-capacity" class="form-control" value="15000">
+            </div>
+          </div>
+          <div style="margin-bottom: 1rem;">
+            <label style="font-size: 0.8rem; font-weight: 600;">Facility Address</label>
+            <input type="text" id="wh-form-address" class="form-control" style="width: 100%;" placeholder="100 Port Street, Miami, FL">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('modal-warehouse')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Create Warehouse</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 7. Product Stock Audit History Modal -->
+  <div id="modal-product-history" class="modal-overlay">
+    <div class="modal-card" style="max-width: 700px;">
+      <div class="modal-header">
+        <h3 class="modal-title" id="history-modal-title">Product Stock Movement Audit History</h3>
+        <button class="modal-close" onclick="closeModal('modal-product-history')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="history-stock-summary" style="margin-bottom: 1rem; font-size: 0.9rem; color: var(--text-secondary);"></div>
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Ref No</th>
+                <th>Type</th>
+                <th>Qty</th>
+                <th>Source / Target</th>
+                <th>User</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody id="history-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeModal('modal-product-history')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toasts Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Application Logic Scripts -->
+  <script src="/js/charts.js"></script>
+  <script src="/js/products.js"></script>
+  <script src="/js/suppliers.js"></script>
+  <script src="/js/warehouses.js"></script>
+  <script src="/js/stock_movement.js"></script>
+  <script src="/js/purchase_orders.js"></script>
+  <script src="/js/dashboard.js"></script>
+  <script src="/js/reports.js"></script>
+  <script src="/js/app.js"></script>
+
+</body>
+</html>
